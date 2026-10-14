@@ -1,12 +1,12 @@
 import {Router} from 'express'
-import scraperPunch from '../scrapers/scraperpunch.js'
+
+import { runAllScrapers } from '../services/scraperServices.js'
 
 const router = Router()
 
-router.get('/punch', async (_req, res) => {
+router.get('/', async (_req, res) => {
     try {
-        const articles = await scraperPunch()
-        res.json(articles)
+        res.json(await runAllScrapers())
     } catch (error) {
         console.error(error)
         res.status(500).json({

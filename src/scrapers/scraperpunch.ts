@@ -1,6 +1,5 @@
 import puppeteer, { Browser } from 'puppeteer'
 import * as cheerio from 'cheerio'
-import { Interface } from 'readline'
 
 //Defines the format returned by this scraper
 //Shared by other scrapers for uniformity
@@ -93,37 +92,9 @@ export default async function scraperPunch(): Promise<NewsArticle[]> {
             // 2) Extract the article image
             // ---------------------------------------
 
-            let image: string | null = null
+            const src = article.find('a img').first().attr('src')
             
-            //Image inside <picture> tag nestled in <a>
-            const picture = headlineLink.find('picture').first()
-
-            //Prefer a WebP source as observed in Page HTML
-            const webpSource = picture
-                .find('source[type="image/webp"]')
-                .first()
-            
-            const srcset = webpSource.attr('srcset')
-
-            if (srcset) {
-                //A srcset can contain several comma separated candidates each followed by a width descriptor
-                const candidates = srcset
-                    .split(',')
-                    .map(candidate => {
-                        const parts = candidate.trim().split(/\s+/)
-
-                        return {
-                            url: parts[0] ?? '',
-                            width: parseInt(parts[1] ?? '', 10) || 0
-                        }
-                    })
-                    .filter(candidate => Boolean(candidate.url))
-
-                //Prefer the candidate with the greatest declared width                
-                candidates.sort((a, b) => b.width - a.width)
-
-                image = candidates[0]?.url ?? null
-            }
+            const image = src && !src.startsWith('data:') ? new URL(src, url).href : null
 
             // ---------------------------------------
             // 3) Avoid duplicate articles

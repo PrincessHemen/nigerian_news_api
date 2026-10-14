@@ -6,5 +6,5 @@ const app = express();
 app.use("/api/articles", articlesRouter);
 
 app.listen(3001, () => {
-    console.log("News API running on port 3001");
+    console.log("News API running on port 3001. Go to http://localhost:3001/api/articles");
 });
