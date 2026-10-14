@@ -86,6 +86,7 @@ export default async function scraperPunch(): Promise<NewsArticle[]> {
                 articleUrl = parsedUrl.href
             } catch (error) {
                 //ignore malformed urls 
+                return 
             }
 
             // ---------------------------------------
@@ -112,8 +113,8 @@ export default async function scraperPunch(): Promise<NewsArticle[]> {
                         const parts = candidate.trim().split(/\s+/)
 
                         return {
-                            url: parts[0],
-                            width: parseInt(parts[1], 10) || 0
+                            url: parts[0] ?? '',
+                            width: parseInt(parts[1] ?? '', 10) || 0
                         }
                     })
                     .filter(candidate => Boolean(candidate.url))
@@ -143,9 +144,12 @@ export default async function scraperPunch(): Promise<NewsArticle[]> {
             })
         })
 
-    } catch (error) {
-        
-    } finally {
+        return articles
 
+    } catch (error) {
+        console.error('Punch newspaper scraping failed', error)
+        throw error 
+    } finally {
+        await browser.close()
     }
 }
