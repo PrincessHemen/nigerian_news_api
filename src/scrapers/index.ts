@@ -1,12 +1,31 @@
-import scraperPunch from "./scraperpunch.js";
-import scraperPremiumTimes from "./scraperPremiumTimes.js";
+import { scrapeRss, scrapeHtml } from './generic.js'
+import type { NewsArticle, SourceConfig } from './types.js'
 
-//use this to test API's whether they allow scraping, before you start:
-//curl -s -o /dev/null -w "%{http_code}\n" -A "Mozilla/5.0" https://SITE/feed
+const sources: Record<string, SourceConfig> = {
+    // Site with a feed 
+    punch: { type: 'rss', feedUrl: 'https://punchng.com/feed/' },
+    premiumtimes: { type: 'rss', feedUrl: 'https://www.premiumtimesng.com/feed/' },
 
-//theCable failed; Cloudfare blocking all scrapers 
+    // Site with no feed, articles present in raw HTML (fill in the selectors from DevTools)
+    // examplesite: {
+    //     type: 'html',
+    //     url: 'https://example.com',
+    //     selectors: { item: 'article', link: 'h2 a', image: 'img’}
+    // },
 
-export const scrapers = {
-    punch: scraperPunch,
-    "premium-times": scraperPremiumTimes
+    // Site that needs a real browser 
+    // jssite: { type: 'custom', run: () => scraperJsSite() },
 }
+
+export const scrapers: Record<string, () => Promise<NewsArticle[]>> = Object.fromEntries(
+    Object.entries(sources).map(([id, cfg]) => [
+        id,
+        () => {
+            switch (cfg.type) {
+                case 'rss': return scrapeRss(cfg.feedUrl)
+                case 'html': return scrapeHtml(cfg.url, cfg.selectors)
+                case 'custom': return cfg.run()
+            }
+        }
+    ])
+)
