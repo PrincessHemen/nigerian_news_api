@@ -124,7 +124,7 @@ Every scraper, whatever the site's raw format, returns articles in this shape:
 | `image`       | `string \| null` | ✅               | Absolute image URL, or `null` if none found      |
 | `publishedAt` | `string \| null` | ❌               | ISO 8601 timestamp, when the source provides one |
 | `author`      | `string \| null` | ❌               | Author name, when the source provides one        |
-| `sourceId`    | `string`         | added by the API | Which source the article came from               |
+| `sourceId`    | `string`         | added by the API | Which newspaper/magazine/blog the article came from               |
 
 `publishedAt` and `author` are only available from RSS/Atom sources. HTML-scraped sources currently return just `title`, `url`, and `image`.
 
