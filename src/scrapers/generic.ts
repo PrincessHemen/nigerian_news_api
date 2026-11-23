@@ -28,6 +28,13 @@ function absolute(href: string | undefined, base: string): string | null {
     }
 }
 
+// Finds the first <img> in an HTML snippet (e.g. an RSS <description>) and returns its absolute URL.
+function imageFromHtml(html: string, base: string): string | null {
+    if (!html) return null
+    const img = cheerio.load(html)('img').first()
+    return absolute(img.attr('src'), base) ?? absolute(img.attr('data-src'), base)
+}
+
 // ---------- RSS / Atom ----------
 
 // Downloads an RSS/Atom feed and converts each entry into a NewsArticle.
@@ -50,10 +57,13 @@ export async function scrapeRss(feedUrl: string): Promise<NewsArticle[]> {
 
         // Try the common image tags in order; `??` moves to the next only if the previous was null.
         // The `\\:` escapes the colon in namespaced tags like <media:content>
+        // Try the structured tags first, then fall back to the first <img> inside the item's HTML body
         const image =
-            absolute(item.find('media\\:content').first().attr('url'), feedUrl) ??
-            absolute(item.find('enclosure').first().attr('url'), feedUrl) ??
-            absolute(item.find('media\\:thumbnail').first().attr('url'), feedUrl)
+        absolute(item.find('media\\:content').first().attr('url'), feedUrl) ??
+        absolute(item.find('enclosure').first().attr('url'), feedUrl) ??
+        absolute(item.find('media\\:thumbnail').first().attr('url'), feedUrl) ??
+        imageFromHtml(item.find('content\\:encoded').first().text(), feedUrl) ??
+        imageFromHtml(item.find('description').first().text(), feedUrl)
 
         // Read the publish date (RSS: pubDate, Atom: published/updated) and parse it
         const rawDate = item.find('pubDate, published, updated').first().text().trim()

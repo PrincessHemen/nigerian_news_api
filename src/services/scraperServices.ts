@@ -9,9 +9,12 @@ const CONCURRENCY = 5
 // Each batch runs in parallel with Promise.allSettled, so one failing scraper never stops the others.
 // Successful results get a sourceId tag and are collected into `articles`; failures are logged and recorded (source + short message) in `errors`.
 // Returns both, so the caller gets the data and a report of which sources broke.
+//if sourceId included in request, only articles from that source are returned
 
-export async function runAllScrapers() {
-    const entries = Object.entries(scrapers)
+export async function runAllScrapers(sourceIds?: string[]) {
+    const entries = Object.entries(scrapers).filter(
+        ([id]) => !sourceIds || sourceIds.includes(id)
+    )
     const articles: (NewsArticle & { sourceId: string })[] = []
     const errors: { source: string; error: string }[] = []
 
