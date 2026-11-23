@@ -13,6 +13,12 @@ const sources: Record<string, SourceConfig> = {
     //     selectors: { item: 'article', link: 'h2 a', image: 'img’}
     // },
 
+    guardian: {
+        type: 'html',
+        url: 'https://guardian.ng/',
+        selectors: { item: 'article', link: 'h3 a', image: 'a img' },
+    },
+
     // Site that needs a real browser 
     // jssite: { type: 'custom', run: () => scraperJsSite() },
 }
