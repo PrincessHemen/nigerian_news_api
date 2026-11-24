@@ -10,7 +10,7 @@ const page = /* html */ `<!doctype html>
 <title>Nigerian News API</title>
 <style>
   :root {
-    --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b;
+    --bg: #F4F6F6; --fg: #1a1a1a; --muted: #6b6b6b;
     --card: #f5f5f4; --border: #e2e2df; --accent: #0a7d3c;
     color-scheme: light dark;
   }

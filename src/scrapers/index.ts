@@ -5,6 +5,8 @@ const sources: Record<string, SourceConfig> = {
     // Site with a feed 
     punch: { type: 'rss', feedUrl: 'https://punchng.com/feed/' },
     premiumtimes: { type: 'rss', feedUrl: 'https://www.premiumtimesng.com/feed/' },
+    vanguard: {type: 'rss', feedUrl: 'https://www.vanguardngr.com/feed/'},
+    thisday: {type: 'rss', feedUrl: 'https://www.thisdaylive.com/feed/'},
 
     // Site with no feed, articles present in raw HTML (fill in the selectors from DevTools)
     // examplesite: {
