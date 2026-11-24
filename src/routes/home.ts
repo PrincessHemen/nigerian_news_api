@@ -64,15 +64,6 @@ const page = /* html */ `<!doctype html>
     <p>Returns the list of news sources the API pulls from. Use a source's <code>id</code>
        to match it against the <code>sourceId</code> field on articles.</p>
     <pre id="curl-sources"></pre>
-<pre>[
-  { "id": "punch", "name": "Punch" },
-  { "id": "premiumtimes", "name": "Premium Times" }
-]</pre>
-  </div>
-
-  <div class="card soon">
-    <p><span class="method">GET</span><code>/api/search?q=</code></p>
-    <p>Coming soon: search across articles.</p>
   </div>
 
   <h2>Example response</h2>
